@@ -72,6 +72,9 @@
 #include <linux/namei.h>
 #include <asm/current.h>
 #include <asm/unaligned.h>
+#if LINUX_VERSION_CODE > KERNEL_VERSION(3,10,0)
+#include <linux/aio.h>
+#endif
 
 #include "exfat_version.h"
 #include "exfat_config.h"
