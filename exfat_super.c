@@ -965,7 +965,12 @@ static int exfat_allow_set_time(struct exfat_sb_info *sbi, struct inode *inode)
 {
 	mode_t allow_utime = sbi->options.allow_utime;
 
-	if (current_fsuid() != inode->i_uid) {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,5,0)
+	if (!uid_eq(current_fsuid(), inode->i_uid))
+#else
+	if (current_fsuid() != inode->i_uid)
+#endif
+	{
 		if (in_group_p(inode->i_gid))
 			allow_utime >>= 3;
 		if (allow_utime & MAY_WRITE)
@@ -1011,7 +1016,6 @@ static int exfat_sanitize_mode(const struct exfat_sb_info *sbi,
 
 static int exfat_setattr(struct dentry *dentry, struct iattr *attr)
 {
-
 	struct exfat_sb_info *sbi = EXFAT_SB(dentry->d_sb);
 	struct inode *inode = dentry->d_inode;
 	unsigned int ia_valid;
@@ -1042,9 +1046,15 @@ static int exfat_setattr(struct dentry *dentry, struct iattr *attr)
 	}
 
 	if (((attr->ia_valid & ATTR_UID) &&
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,5,0)
+		 (!uid_eq(attr->ia_uid, sbi->options.fs_uid))) ||
+		((attr->ia_valid & ATTR_GID) &&
+		 (!gid_eq(attr->ia_gid, sbi->options.fs_gid))) ||
+#else
 		 (attr->ia_uid != sbi->options.fs_uid)) ||
 		((attr->ia_valid & ATTR_GID) &&
 		 (attr->ia_gid != sbi->options.fs_gid)) ||
+#endif
 		((attr->ia_valid & ATTR_MODE) &&
 		 (attr->ia_mode & ~(S_IFREG | S_IFLNK | S_IFDIR | S_IRWXUGO)))) {
 		return -EPERM;
@@ -1747,7 +1757,7 @@ static int exfat_remount(struct super_block *sb, int *flags, char *data)
 	return 0;
 }
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,4,00)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,4,0)
 static int exfat_show_options(struct seq_file *m, struct dentry *root)
 {
 	struct exfat_sb_info *sbi = EXFAT_SB(root->d_sb);
@@ -1758,10 +1768,17 @@ static int exfat_show_options(struct seq_file *m, struct vfsmount *mnt)
 #endif
 	struct exfat_mount_options *opts = &sbi->options;
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,5,0)
+	if (__kuid_val(opts->fs_uid))
+		seq_printf(m, ",uid=%u", __kuid_val(opts->fs_uid));
+	if (__kgid_val(opts->fs_gid))
+		seq_printf(m, ",gid=%u", __kgid_val(opts->fs_gid));
+#else
 	if (opts->fs_uid != 0)
 		seq_printf(m, ",uid=%u", opts->fs_uid);
 	if (opts->fs_gid != 0)
 		seq_printf(m, ",gid=%u", opts->fs_gid);
+#endif
 	seq_printf(m, ",fmask=%04o", opts->fs_fmask);
 	seq_printf(m, ",dmask=%04o", opts->fs_dmask);
 	if (opts->allow_utime)
@@ -1882,12 +1899,20 @@ static int parse_options(char *options, int silent, int *debug,
 		case Opt_uid:
 			if (match_int(&args[0], &option))
 				return 0;
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,5,0)
+			opts->fs_uid = KUIDT_INIT(option);
+#else
 			opts->fs_uid = option;
+#endif
 			break;
 		case Opt_gid:
 			if (match_int(&args[0], &option))
 				return 0;
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,5,0)
+			opts->fs_gid = KGIDT_INIT(option);
+#else
 			opts->fs_gid = option;
+#endif
 			break;
 		case Opt_umask:
 		case Opt_dmask:
