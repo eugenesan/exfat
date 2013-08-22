@@ -16,6 +16,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/*
+ *  PROJECT : exFAT & FAT12/16/32 File System
+ *  FILE    : exfat_oal.h
+ *  PURPOSE : Header File for exFAT OS Adaptation Layer
+ *            (Semaphore Functions & Real-Time Clock Functions)
+ */
+
 #ifndef _EXFAT_OAL_H
 #define _EXFAT_OAL_H
 
@@ -28,12 +35,12 @@ extern "C" {
 #endif
 
 	typedef struct {
-		UINT16      sec;
-		UINT16      min;
-		UINT16      hour;
-		UINT16      day;
-		UINT16      mon;
-		UINT16      year;
+		UINT16      sec;        /* 0 ~ 59               */
+		UINT16      min;        /* 0 ~ 59               */
+		UINT16      hour;       /* 0 ~ 23               */
+		UINT16      day;        /* 1 ~ 31               */
+		UINT16      mon;        /* 1 ~ 12               */
+		UINT16      year;       /* 0 ~ 127 (since 1980) */
 	} TIMESTAMP_T;
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37)

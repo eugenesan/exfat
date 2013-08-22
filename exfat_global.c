@@ -16,6 +16,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/*
+ *  PROJECT : exFAT & FAT12/16/32 File System
+ *  FILE    : exfat_global.c
+ *  PURPOSE : exFAT Miscellaneous Functions
+ */
+
 #include "exfat_config.h"
 #include "exfat_global.h"
 

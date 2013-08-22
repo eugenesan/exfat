@@ -16,6 +16,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/*
+ *  PROJECT : exFAT & FAT12/16/32 File System
+ *  FILE    : exfat_nls.h
+ *  PURPOSE : Header File for exFAT NLS Manager
+ */
+
 #ifndef _EXFAT_NLS_H
 #define _EXFAT_NLS_H
 
@@ -42,18 +48,20 @@ extern "C" {
 #define UNI_PAR_DIR_NAME        "\0.\0."
 #endif
 
-
+/* DOS name stucture */
 typedef struct {
 	UINT8       name[DOS_NAME_LENGTH];
 	UINT8       name_case;
 } DOS_NAME_T;
 
+/* unicode name stucture */
 typedef struct {
 	UINT16      name[MAX_NAME_LENGTH];
 	UINT16      name_hash;
 	UINT8       name_len;
 } UNI_NAME_T;
 
+/* NLS management function */
 UINT16 nls_upper(struct super_block *sb, UINT16 a);
 INT32  nls_dosname_cmp(struct super_block *sb, UINT8 *a, UINT8 *b);
 INT32  nls_uniname_cmp(struct super_block *sb, UINT16 *a, UINT16 *b);

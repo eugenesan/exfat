@@ -16,6 +16,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/*
+ *  PROJECT : exFAT & FAT12/16/32 File System
+ *  FILE    : exfat_part.h
+ *  PURPOSE : Header File for exFAT Partition Manager
+ */
+
 #ifndef _EXFAT_PART_H
 #define _EXFAT_PART_H
 
@@ -28,12 +34,15 @@ extern "C" {
 #endif
 
 #define MBR_SIGNATURE           0xAA55
+
+	/* MS-DOS FAT master boot record (512 bytes) */
 	typedef struct {
 		UINT8       boot_code[446];
 		UINT8       partition[64];
 		UINT8       signature[2];
 	} MBR_SECTOR_T;
 
+	/* MS-DOS FAT partition table (64 bytes) */
 	typedef struct {
 		UINT8       def_boot;
 		UINT8       bgn_chs[3];
@@ -43,6 +52,7 @@ extern "C" {
 		UINT8       num_sectors[4];
 	} PART_ENTRY_T;
 
+	/* volume management functions */
 	INT32 ffsSetPartition(INT32 dev, INT32 num_vol, PART_INFO_T *vol_spec);
 	INT32 ffsGetPartition(INT32 dev, INT32 *num_vol, PART_INFO_T *vol_spec);
 	INT32 ffsGetDevInfo(INT32 dev, DEV_INFO_T *info);

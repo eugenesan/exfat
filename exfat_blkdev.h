@@ -16,6 +16,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/*
+ *  PROJECT : exFAT & FAT12/16/32 File System
+ *  FILE    : exfat_blkdev.h
+ *  PURPOSE : Header File for exFAT Block Device Driver Glue Layer
+ */
+
 #ifndef _EXFAT_BLKDEV_H
 #define _EXFAT_BLKDEV_H
 
@@ -26,11 +32,11 @@
 extern "C" {
 #endif
 	typedef struct __BD_INFO_T {
-		INT32 sector_size;
+		INT32 sector_size;      // in bytes
 		INT32 sector_size_bits;
 		INT32 sector_size_mask;
-		INT32 num_sectors;
-		BOOL  opened;
+		INT32 num_sectors;      // total number of sectors in this block device
+		BOOL  opened;           // opened or not
 	} BD_INFO_T;
 
 	INT32 bdev_init(void);

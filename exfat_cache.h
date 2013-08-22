@@ -16,6 +16,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/*
+ *  PROJECT : exFAT & FAT12/16/32 File System
+ *  FILE    : exfat_cache.h
+ *  PURPOSE : Header File for exFAT Cache Manager
+ *            (FAT Cache & Buffer Cache)
+ */
+
 #ifndef _EXFAT_CACHE_H
 #define _EXFAT_CACHE_H
 

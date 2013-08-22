@@ -16,6 +16,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/*
+ *  PROJECT : exFAT & FAT12/16/32 File System
+ *  FILE    : exfat_upcase.c
+ *  PURPOSE : exFAT Up-case Table
+ */
+
 #include "exfat_config.h"
 #include "exfat_global.h"
 

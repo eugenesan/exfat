@@ -16,6 +16,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/*
+ *  PROJECT : exFAT & FAT12/16/32 File System
+ *  FILE    : exfat_api.h
+ *  PURPOSE : Header File for exFAT API Glue Laye
+ */
+
 #ifndef _EXFAT_API_H
 #define _EXFAT_API_H
 
@@ -29,18 +35,21 @@ extern "C" {
 #define EXFAT_SUPER_MAGIC       (0x2011BAB0L)
 #define EXFAT_ROOT_INO          1
 
-#define FAT12                   0x01    
-#define FAT16                   0x0E    
-#define FAT32                   0x0C    
-#define EXFAT                   0x07    
+/* FAT types */
+#define FAT12                   0x01    // FAT12
+#define FAT16                   0x0E    // Win95 FAT16 (LBA)
+#define FAT32                   0x0C    // Win95 FAT32 (LBA)
+#define EXFAT                   0x07    // exFAT
 
-#define MAX_CHARSET_SIZE        3       
-#define MAX_PATH_DEPTH          15      
-#define MAX_NAME_LENGTH         256     
-#define MAX_PATH_LENGTH         260     
-#define DOS_NAME_LENGTH         11      
-#define DOS_PATH_LENGTH         80      
+/* file name lengths */
+#define MAX_CHARSET_SIZE        3       // max size of multi-byte character
+#define MAX_PATH_DEPTH          15      // max depth of path name
+#define MAX_NAME_LENGTH         256     // max len of file name including NULL
+#define MAX_PATH_LENGTH         260     // max len of path name including NULL
+#define DOS_NAME_LENGTH         11      // DOS file name length excluding NULL
+#define DOS_PATH_LENGTH         80      // DOS path name length excluding NULL
 
+/* file attributes */
 #define ATTR_NORMAL             0x0000
 #define ATTR_READONLY           0x0001
 #define ATTR_HIDDEN             0x0002
@@ -52,9 +61,11 @@ extern "C" {
 #define ATTR_EXTEND             0x000F
 #define ATTR_RWMASK             0x007E
 
+/* file creation modes */
 #define FM_REGULAR              0x00
 #define FM_SYMLINK              0x40
 
+/* return values */
 #define FFS_SUCCESS             0
 #define FFS_MEDIAERR            1
 #define FFS_FORMATERR           2
@@ -73,8 +84,8 @@ extern "C" {
 #define FFS_EOF                 15
 #define FFS_DIRBUSY             16
 #define FFS_MEMORYERR           17
-#define FFS_NAMETOOLONG		18
-#define FFS_ERROR               19      
+#define FFS_NAMETOOLONG         18
+#define FFS_ERROR               19      // generic error code
 
 	typedef struct {
 		UINT16      Year;
@@ -87,13 +98,13 @@ extern "C" {
 	} DATE_TIME_T;
 
 	typedef struct {
-		UINT32      Offset;    
-		UINT32      Size;      
+		UINT32      Offset;    // start sector number of the partition
+		UINT32      Size;      // in sectors
 	} PART_INFO_T;
 
 	typedef struct {
-		UINT32      SecSize;    
-		UINT32      DevSize;    
+		UINT32      SecSize;    // sector size in bytes
+		UINT32      DevSize;    // block device size in sectors
 	} DEV_INFO_T;
 
 	typedef struct {
@@ -104,12 +115,14 @@ extern "C" {
 		UINT32      UsedClusters;
 	} VOL_INFO_T;
 
+	/* directory structure */
 	typedef struct {
 		UINT32      dir;
 		INT32       size;
 		UINT8       flags;
 	} CHAIN_T;
 
+	/* file id structure */
 	typedef struct {
 		CHAIN_T     dir;
 		INT32       entry;
@@ -125,7 +138,7 @@ extern "C" {
 
 	typedef struct {
 		INT8        Name[MAX_NAME_LENGTH *MAX_CHARSET_SIZE];
-		INT8        ShortName[DOS_NAME_LENGTH + 2];     
+		INT8        ShortName[DOS_NAME_LENGTH + 2];     // used only for FAT12/16/32, not used for exFAT
 		UINT32      Attr;
 		UINT64      Size;
 		UINT32      NumSubdirs;
@@ -134,14 +147,17 @@ extern "C" {
 		DATE_TIME_T AccessTimestamp;
 	} DIR_ENTRY_T;
 
+	/* file system initialization & shutdown functions */
 	INT32 FsInit(void);
 	INT32 FsShutdown(void);
 
+	/* volume management functions */
 	INT32 FsMountVol(struct super_block *sb);
 	INT32 FsUmountVol(struct super_block *sb);
 	INT32 FsGetVolInfo(struct super_block *sb, VOL_INFO_T *info);
 	INT32 FsSyncVol(struct super_block *sb, INT32 do_sync);
 
+	/* file management functions */
 	INT32 FsLookupFile(struct inode *inode, UINT8 *path, FILE_ID_T *fid);
 	INT32 FsCreateFile(struct inode *inode, UINT8 *path, UINT8 mode, FILE_ID_T *fid);
 	INT32 FsReadFile(struct inode *inode, FILE_ID_T *fid, void *buffer, UINT64 count, UINT64 *rcount);
@@ -154,10 +170,12 @@ extern "C" {
 	INT32 FsWriteStat(struct inode *inode, DIR_ENTRY_T *info);
 	INT32 FsMapCluster(struct inode *inode, INT32 clu_offset, UINT32 *clu);
 
+	/* directory management functions */
 	INT32 FsCreateDir(struct inode *inode, UINT8 *path, FILE_ID_T *fid);
 	INT32 FsReadDir(struct inode *inode, DIR_ENTRY_T *dir_entry);
 	INT32 FsRemoveDir(struct inode *inode, FILE_ID_T *fid);
 
+	/* debug functions */
 	INT32 FsReleaseCache(struct super_block *sb);
 #ifdef __cplusplus
 }

@@ -16,6 +16,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/*
+ *  PROJECT : exFAT & FAT12/16/32 File System
+ *  FILE    : exfat_cache.c
+ *  PURPOSE : exFAT Cache Manager
+ *            (FAT Cache & Buffer Cache)
+ */
+
 #include "exfat_config.h"
 #include "exfat_global.h"
 #include "exfat_data.h"
@@ -26,6 +33,7 @@
 
 extern FS_STRUCT_T      fs_struct[];
 
+/* All buffer structures are protected w/ p_fs->v_sem */
 #define sm_P(s)
 #define sm_V(s)
 
@@ -49,12 +57,17 @@ static void push_to_lru(BUF_CACHE_T *bp, BUF_CACHE_T *list);
 static void move_to_mru(BUF_CACHE_T *bp, BUF_CACHE_T *list);
 static void move_to_lru(BUF_CACHE_T *bp, BUF_CACHE_T *list);
 
+/* 
+ * Cache Initialization Functions
+ */
+
 INT32 buf_init(struct super_block *sb)
 {
 	FS_INFO_T *p_fs = &(EXFAT_SB(sb)->fs_info);
 
 	INT32 i;
 
+	/* LRU list */
 	p_fs->FAT_cache_lru_list.next = p_fs->FAT_cache_lru_list.prev = &p_fs->FAT_cache_lru_list;
 
 	for (i = 0; i < FAT_CACHE_SIZE; i++) {
@@ -77,6 +90,7 @@ INT32 buf_init(struct super_block *sb)
 		push_to_mru(&(p_fs->buf_cache_array[i]), &p_fs->buf_cache_lru_list);
 	}
 
+	/* HASH list */
 	for (i = 0; i < FAT_CACHE_HASH_SIZE; i++) {
 		p_fs->FAT_cache_hash_list[i].drv = -1;
 		p_fs->FAT_cache_hash_list[i].sec = ~0;
@@ -105,6 +119,15 @@ INT32 buf_shutdown(struct super_block *sb)
 	return(FFS_SUCCESS);
 }
 
+/*
+ * FAT Read/Write Functions
+ */
+
+/* in : sb, loc
+ * out: content
+ * returns 0 on success
+ *            -1 on error
+ */
 INT32 FAT_read(struct super_block *sb, UINT32 loc, UINT32 *content)
 {
 	INT32 ret;
@@ -261,7 +284,7 @@ static INT32 __FAT_write(struct super_block *sb, UINT32 loc, UINT32 content)
 		if (!fat_sector)
 			return -1;
 
-		if (loc & 1) { 
+		if (loc & 1) { /* odd */
 
 			content <<= 4;
 
@@ -280,7 +303,7 @@ static INT32 __FAT_write(struct super_block *sb, UINT32 loc, UINT32 content)
 
 				SET16(fat_entry, content);
 			}
-		} else {
+		} else { /* even */
 			fat_sector[off] = (UINT8)(content);
 
 			if (off == (p_bd->sector_size-1)) {
@@ -332,7 +355,7 @@ static INT32 __FAT_write(struct super_block *sb, UINT32 loc, UINT32 content)
 		SET32_A(fat_entry, content);
 	}
 
-	else { 
+	else { /* p_fs->vol_type == EXFAT */
 
 		sec = p_fs->FAT1_start_sector + (loc >> (p_bd->sector_size_bits-2));
 		off = (loc << 2) & p_bd->sector_size_mask;
@@ -495,6 +518,10 @@ static void FAT_cache_remove_hash(BUF_CACHE_T *bp)
 	(bp->hash_next)->hash_prev = bp->hash_prev;
 }
 
+/*
+ * Buffer Read/Write Functions
+ */
+
 UINT8 *buf_getblk(struct super_block *sb, UINT32 sec)
 {
 	UINT8 *buf;
@@ -558,7 +585,7 @@ void buf_modify(struct super_block *sb, UINT32 sec)
 	WARN(!bp, "[EXFAT] failed to find buffer_cache(sector:%u).\n", sec);
 
 	sm_V(&b_sem);
-} 
+}
 
 void buf_lock(struct super_block *sb, UINT32 sec)
 {
@@ -709,6 +736,10 @@ static void buf_cache_remove_hash(BUF_CACHE_T *bp)
 	(bp->hash_next)->hash_prev = bp->hash_prev;
 }
 
+/*
+ * Local Function Definitions
+ */
+
 static void push_to_mru(BUF_CACHE_T *bp, BUF_CACHE_T *list)
 {
 	bp->next = list->next;
@@ -723,7 +754,7 @@ static void push_to_lru(BUF_CACHE_T *bp, BUF_CACHE_T *list)
 	bp->next = list;
 	list->prev->next = bp;
 	list->prev = bp;
-} 
+}
 
 static void move_to_mru(BUF_CACHE_T *bp, BUF_CACHE_T *list)
 {
