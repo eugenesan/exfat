@@ -33,9 +33,22 @@
 #include "exfat_super.h"
 #include "exfat.h"
 
+/*
+ * GLOBAL VARIABLE DEFINITIONS
+ */
+
+/*
+ * File Manager
+ */
+
 /* file system volume table */
 FS_STRUCT_T fs_struct[MAX_DRIVE];
 
+/*
+ * Buffer Manager
+ */
+
+#if 0
 /* FAT cache */
 DECLARE_MUTEX(f_sem);
 BUF_CACHE_T FAT_cache_array[FAT_CACHE_SIZE];
@@ -47,3 +60,4 @@ DECLARE_MUTEX(b_sem);
 BUF_CACHE_T buf_cache_array[BUF_CACHE_SIZE];
 BUF_CACHE_T buf_cache_lru_list;
 BUF_CACHE_T buf_cache_hash_list[BUF_CACHE_HASH_SIZE];
+#endif

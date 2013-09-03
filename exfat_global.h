@@ -37,7 +37,11 @@
 extern "C" {
 #endif
 
-/*  Well-Known Constants (DO NOT CHANGE THIS PART !!) */
+	/*
+	 * CONSTANT & MACRO DEFINITIONS
+	 */
+
+	/* Well-Known Constants (DO NOT CHANGE THIS PART !!) */
 #ifndef TRUE
 #define TRUE                    1
 #endif
@@ -54,28 +58,37 @@ extern "C" {
 #define NULL                    0
 #endif
 
-/* Min/Max macro */
+	/* Min/Max macro */
 #define MIN(a, b)               (((a) < (b)) ? (a) : (b))
 #define MAX(a, b)               (((a) > (b)) ? (a) : (b))
 
-/*
- * type definitions for primitive types;
- * these should be re-defined to meet its size for each OS platform;
- * these should be used instead of primitive types for portability.
- */
+	/*
+	 * TYPE DEFINITIONS
+	 */
 
-typedef char                    INT8;   // 1 byte signed integer
-typedef short                   INT16;  // 2 byte signed integer
-typedef int                     INT32;  // 4 byte signed integer
-typedef long long               INT64;  // 8 byte signed integer
+	/*
+	 * type definitions for primitive types;
+	 * these should be re-defined to meet its size for each OS platform;
+	 * these should be used instead of primitive types for portability.
+	 */
 
-typedef unsigned char           UINT8;  // 1 byte unsigned integer
-typedef unsigned short          UINT16; // 2 byte unsigned integer
-typedef unsigned int            UINT32; // 4 byte unsigned integer
-typedef unsigned long long      UINT64; // 8 byte ussigned integer
-typedef unsigned char           BOOL;
+	typedef char                    INT8;   // 1 byte signed integer
+	typedef short                   INT16;  // 2 byte signed integer
+	typedef int                     INT32;  // 4 byte signed integer
+	typedef long long               INT64;  // 8 byte signed integer
 
-/* Memory Manipulation Macros & Functions */
+	typedef unsigned char           UINT8;  // 1 byte unsigned integer
+	typedef unsigned short          UINT16; // 2 byte unsigned integer
+	typedef unsigned int            UINT32; // 4 byte unsigned integer
+	typedef unsigned long long      UINT64; // 8 byte ussigned integer
+
+	typedef unsigned char           BOOL;
+
+	/*
+	 * LIBRARY FUNCTION DECLARATIONS -- WELL-KNOWN FUNCTIONS
+	 */
+
+	/* Memory Manipulation Macros & Functions */
 #ifdef MALLOC
 #undef MALLOC
 #endif
@@ -99,7 +112,9 @@ typedef unsigned char           BOOL;
 #define MEMCMP(mem1, mem2, size)        memcmp(mem1, mem2, size)
 #define COPY_DENTRY(dest, src)          memcpy(dest, src, sizeof(DENTRY_T))
 
-/* String Manipulation Macros & Functions */
+	/*
+	 * String Manipulation Macros & Functions
+	 */
 #define STRCPY(dest, src)               strcpy(dest, src)
 #define STRNCPY(dest, src, n)           strncpy(dest, src, n)
 #define STRCAT(str1, str2)              strcat(str1, str2)
@@ -113,10 +128,10 @@ typedef unsigned char           BOOL;
 #define WSTRCHR(str, wchar)             __wstrchr(str, wchar)
 #define WSTRLEN(str)                    __wstrlen(str)
 
-/*
- * Debugging Macros & Functions
- * EXFAT_CONFIG_DEBUG_MSG is configured in exfat_config.h
- */
+	/*
+	 * Debugging Macros & Functions
+	 * EXFAT_CONFIG_DEBUG_MSG is configured in exfat_config.h
+	 */
 
 #if EXFAT_CONFIG_DEBUG_MSG
 #define PRINTK(...)			\
@@ -127,7 +142,13 @@ typedef unsigned char           BOOL;
 #define PRINTK(...)
 #endif
 
-	/* Bitmap Manipulation Functions */
+	/*
+	 * LIBRARY FUNCTION DECLARATIONS -- OTHER UTILITY FUNCTIONS
+	 */
+
+	/*
+	 * Bitmap Manipulation Functions
+	 */
 	void    Bitmap_set_all(UINT8 *bitmap, INT32 mapsize);
 	void    Bitmap_clear_all(UINT8 *bitmap, INT32 mapsize);
 	INT32   Bitmap_test(UINT8 *bitmap, INT32 i);
@@ -136,11 +157,17 @@ typedef unsigned char           BOOL;
 	void    Bitmap_nbits_set(UINT8 *bitmap, INT32 offset, INT32 nbits);
 	void    Bitmap_nbits_clear(UINT8 *bitmap, INT32 offset, INT32 nbits);
 
-	/* Miscellaneous Library Functions */
+	/*
+	 * Miscellaneous Library Functions
+	 */
 	void    my_itoa(INT8 *buf, INT32 v);
 	INT32   my_log2(UINT32 v);
 
-/* debug message ouput macro */
+	/*
+	 * DEFINITIONS FOR DEBUGGING
+	 */
+
+	/* debug message ouput macro */
 #ifdef PRINT
 #undef PRINT
 #endif

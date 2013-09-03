@@ -32,16 +32,20 @@
 extern "C" {
 #endif
 
+	/*
+	 * Constant & Macro Definitions
+	 */
+
 #define EXFAT_SUPER_MAGIC       (0x2011BAB0L)
 #define EXFAT_ROOT_INO          1
 
-/* FAT types */
+	/* FAT types */
 #define FAT12                   0x01    // FAT12
 #define FAT16                   0x0E    // Win95 FAT16 (LBA)
 #define FAT32                   0x0C    // Win95 FAT32 (LBA)
 #define EXFAT                   0x07    // exFAT
 
-/* file name lengths */
+	/* file name lengths */
 #define MAX_CHARSET_SIZE        3       // max size of multi-byte character
 #define MAX_PATH_DEPTH          15      // max depth of path name
 #define MAX_NAME_LENGTH         256     // max len of file name including NULL
@@ -49,7 +53,7 @@ extern "C" {
 #define DOS_NAME_LENGTH         11      // DOS file name length excluding NULL
 #define DOS_PATH_LENGTH         80      // DOS path name length excluding NULL
 
-/* file attributes */
+	/* file attributes */
 #define ATTR_NORMAL             0x0000
 #define ATTR_READONLY           0x0001
 #define ATTR_HIDDEN             0x0002
@@ -61,11 +65,11 @@ extern "C" {
 #define ATTR_EXTEND             0x000F
 #define ATTR_RWMASK             0x007E
 
-/* file creation modes */
+	/* file creation modes */
 #define FM_REGULAR              0x00
 #define FM_SYMLINK              0x40
 
-/* return values */
+	/* return values */
 #define FFS_SUCCESS             0
 #define FFS_MEDIAERR            1
 #define FFS_FORMATERR           2
@@ -86,6 +90,10 @@ extern "C" {
 #define FFS_MEMORYERR           17
 #define FFS_NAMETOOLONG         18
 #define FFS_ERROR               19      // generic error code
+
+	/*
+	 * Constant & Macro Definitions
+	 */
 
 	typedef struct {
 		UINT16      Year;
@@ -147,6 +155,14 @@ extern "C" {
 		DATE_TIME_T AccessTimestamp;
 	} DIR_ENTRY_T;
 
+	/*
+	 * API FUNCTION DECLARATIONS
+	 */
+
+	/*
+	 * External Function Declarations
+	 */
+
 	/* file system initialization & shutdown functions */
 	INT32 FsInit(void);
 	INT32 FsShutdown(void);
@@ -177,6 +193,13 @@ extern "C" {
 
 	/* debug functions */
 	INT32 FsReleaseCache(struct super_block *sb);
+
+	/* partition management functions */
+	/*
+	INT32 FsSetPartition(INT32 dev, INT32 num_vol, PART_INFO_T *vol_spec);
+	INT32 FsGetPartition(INT32 dev, INT32 *num_vol, PART_INFO_T *vol_spec);
+	INT32 FsGetDevInfo(INT32 dev, DEV_INFO_T *info);
+	*/
 #ifdef __cplusplus
 }
 #endif 

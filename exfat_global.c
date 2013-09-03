@@ -25,6 +25,19 @@
 #include "exfat_config.h"
 #include "exfat_global.h"
 
+/*
+ * Global Variable Definitions
+ */
+
+/*
+ * LIBRARY FUNCTION DEFINITIONS -- WELL-KNOWN FUNCTIONS
+ */
+
+/*
+ * String Manipulation Functions
+ *(defined if no system memory functions are available)
+ */
+
 INT32 __wstrchr(UINT16 *str, UINT16 wchar)
 {
 	while (*str) {
@@ -40,6 +53,14 @@ INT32 __wstrlen(UINT16 *str)
 	while (*(str++)) length++;
 	return(length);
 }
+
+/*
+ * LIBRARY FUNCTION DEFINITIONS -- OTHER UTILITY FUNCTIONS
+ */
+
+/*
+ * Bitmap Manipulation Functions
+ */
 
 #define BITMAP_LOC(v)           ((v) >> 3)
 #define BITMAP_SHIFT(v)         ((v) & 0x07)
@@ -91,6 +112,11 @@ void Bitmap_nbits_clear(UINT8 *bitmap, INT32 offset, INT32 nbits)
 	}
 }
 
+/*
+ * Miscellaneous Library Functions
+ */
+
+/* integer to ascii conversion */
 void my_itoa(INT8 *buf, INT32 v)
 {
 	INT32 mod[10];
@@ -112,6 +138,7 @@ void my_itoa(INT8 *buf, INT32 v)
 	*buf = '\0';
 }
 
+/* value to base 2 log conversion */
 INT32 my_log2(UINT32 v)
 {
 	UINT32 bits = 0;

@@ -31,6 +31,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+	/*
+	 * Type Definitions
+	 */
+
 	typedef struct __BD_INFO_T {
 		INT32 sector_size;      // in bytes
 		INT32 sector_size_bits;
@@ -38,6 +43,10 @@ extern "C" {
 		INT32 num_sectors;      // total number of sectors in this block device
 		BOOL  opened;           // opened or not
 	} BD_INFO_T;
+
+	/*
+	 * External Function Declarations
+	 */
 
 	INT32 bdev_init(void);
 	INT32 bdev_shutdown(void);

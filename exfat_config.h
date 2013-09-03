@@ -35,8 +35,10 @@ extern "C" {
 
 #define FFS_CONFIG_OS           OS_LINUX
 
-/* Set this definition to 1 to support APIs with pointer parameters
- * to 32-bit variables (e.g. read, write, seek, get_filesize) */
+/*
+ * Set this definition to 1 to support APIs with pointer parameters
+ * to 32-bit variables (e.g. read, write, seek, get_filesize)
+ */
 #define FFS_CONFIG_LEGACY_32BIT_API     0
 
 /* Set appropriate definitions to 1's to support the languages */

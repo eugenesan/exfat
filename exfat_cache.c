@@ -31,6 +31,10 @@
 #include "exfat_super.h"
 #include "exfat.h"
 
+/*
+ * Global Variable Definitions
+ */
+
 extern FS_STRUCT_T      fs_struct[];
 
 /* All buffer structures are protected w/ p_fs->v_sem */
@@ -57,7 +61,7 @@ static void push_to_lru(BUF_CACHE_T *bp, BUF_CACHE_T *list);
 static void move_to_mru(BUF_CACHE_T *bp, BUF_CACHE_T *list);
 static void move_to_lru(BUF_CACHE_T *bp, BUF_CACHE_T *list);
 
-/* 
+/*
  * Cache Initialization Functions
  */
 
@@ -123,10 +127,11 @@ INT32 buf_shutdown(struct super_block *sb)
  * FAT Read/Write Functions
  */
 
-/* in : sb, loc
+/*
+ * in : sb, loc
  * out: content
- * returns 0 on success
- *            -1 on error
+ * returns: 0 on success
+ *         -1 on error
  */
 INT32 FAT_read(struct super_block *sb, UINT32 loc, UINT32 *content)
 {
@@ -203,8 +208,7 @@ static INT32 __FAT_read(struct super_block *sb, UINT32 loc, UINT32 *content)
 		off = (loc << 1) & p_bd->sector_size_mask;
 
 		fat_sector = FAT_getblk(sb, sec);
-		if
-		(!fat_sector)
+		if (!fat_sector)
 			return -1;
 
 		fat_entry = &(fat_sector[off]);
@@ -371,7 +375,7 @@ static INT32 __FAT_write(struct super_block *sb, UINT32 loc, UINT32 content)
 
 	FAT_modify(sb, sec);
 	return 0;
-} 
+}
 
 UINT8 *FAT_getblk(struct super_block *sb, UINT32 sec)
 {
@@ -533,7 +537,7 @@ UINT8 *buf_getblk(struct super_block *sb, UINT32 sec)
 	sm_V(&b_sem);
 
 	return(buf);
-} 
+}
 
 static UINT8 *__buf_getblk(struct super_block *sb, UINT32 sec)
 {

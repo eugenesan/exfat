@@ -41,13 +41,14 @@ extern "C" {
 #endif
 
 #if EXFAT_CONFIG_KERNEL_DEBUG
-/* For Debugging Purpose
- * IOCTL code 'f' used by
- *   - file systems typically #0~0x1F
- *   - embedded terminal devices #128~
- *   - exts for debugging purpose #99
- * number 100 and 101 is availble now but has possible conflicts
- */
+	/*
+	 * For Debugging Purpose
+	 * IOCTL code 'f' used by
+	 *   - file systems typically #0~0x1F
+	 *   - embedded terminal devices #128~
+	 *   - exts for debugging purpose #99
+	 * number 100 and 101 is availble now but has possible conflicts
+	 */
 #define EXFAT_IOC_GET_DEBUGFLAGS       _IOR('f', 100, long)
 #define EXFAT_IOC_SET_DEBUGFLAGS       _IOW('f', 101, long)
 
@@ -55,12 +56,16 @@ extern "C" {
 #define EXFAT_DEBUGFLAGS_ERROR_RW              0x02
 #endif
 
+	/*
+	 * Constant & Macro Definitions
+	 */
+
 #define MAX_VOLUME              4           // max num of volumes per device
 
 #define DENTRY_SIZE             32          // dir entry size
 #define DENTRY_SIZE_BITS        5
 
-/* PBR entries */
+	/* PBR entries */
 #define PBR_SIGNATURE           0xAA55
 #define EXT_SIGNATURE           0xAA550000
 #define VOL_LABEL               "NO NAME    " // size should be 11
@@ -72,7 +77,7 @@ extern "C" {
 #define VOL_CLEAN               0x0000
 #define VOL_DIRTY               0x0002
 
-/* max number of clusters */
+	/* max number of clusters */
 #define FAT12_THRESHOLD         4087        // 2^12 - 1 + 2 (clu 0 & 1)
 #define FAT16_THRESHOLD         65527       // 2^16 - 1 + 2
 #define FAT32_THRESHOLD         268435457   // 2^28 - 1 + 2
@@ -100,12 +105,12 @@ extern "C" {
 #define TYPE_BENIGN_SEC         0x0800
 #define TYPE_ALL                0x0FFF
 
-/* time modes */
+	/* time modes */
 #define TM_CREATE               0
 #define TM_MODIFY               1
 #define TM_ACCESS               2
 
-/* checksum types */
+	/* checksum types */
 #define CS_DIR_ENTRY            0
 #define CS_PBR_SECTOR           1
 #define CS_DEFAULT              2
@@ -174,7 +179,7 @@ extern "C" {
 #define SET64_A(p_dst,src)      SET64(p_dst, src)
 #endif
 
-/* Upcase tabel mecro */
+	/* Upcase tabel mecro */
 #define HIGH_INDEX_BIT (8)
 #define HIGH_INDEX_MASK (0xFF00)
 #define LOW_INDEX_BIT (16-HIGH_INDEX_BIT)
@@ -189,6 +194,10 @@ extern "C" {
 	{
 		return i & ~HIGH_INDEX_MASK;
 	}
+
+	/*
+	 * Type Definitions
+	 */
 
 	/* MS_DOS FAT partition boot record (512 bytes) */
 	typedef struct {
@@ -275,11 +284,11 @@ extern "C" {
 
 	/* MS-DOS FAT file system information sector (512 bytes) */
 	typedef struct {
-		UINT8       signature1[4];
+		UINT8       signature1[4];              // aligned
 		UINT8       reserved1[480];
-		UINT8       signature2[4];
-		UINT8       free_cluster[4];
-		UINT8       next_cluster[4];
+		UINT8       signature2[4];              // aligned
+		UINT8       free_cluster[4];            // aligned
+		UINT8       next_cluster[4];            // aligned
 		UINT8       reserved2[14];
 		UINT8       signature3[2];
 	} FSI_SECTOR_T;
@@ -294,14 +303,14 @@ extern "C" {
 		UINT8       attr;
 		UINT8       lcase;
 		UINT8       create_time_ms;
-		UINT8       create_time[2];
-		UINT8       create_date[2];
-		UINT8       access_date[2];
-		UINT8       start_clu_hi[2];
-		UINT8       modify_time[2];
-		UINT8       modify_date[2];
-		UINT8       start_clu_lo[2];
-		UINT8       size[4];
+		UINT8       create_time[2];             // aligned
+		UINT8       create_date[2];             // aligned
+		UINT8       access_date[2];             // aligned
+		UINT8       start_clu_hi[2];            // aligned
+		UINT8       modify_time[2];             // aligned
+		UINT8       modify_date[2];             // aligned
+		UINT8       start_clu_lo[2];            // aligned
+		UINT8       size[4];                    // aligned
 	} DOS_DENTRY_T;
 
 	/* MS-DOS FAT extended directory entry (32 bytes) */
@@ -311,24 +320,24 @@ extern "C" {
 		UINT8       attr;
 		UINT8       sysid;
 		UINT8       checksum;
-		UINT8       unicode_5_10[12];
-		UINT8       start_clu[2];
-		UINT8       unicode_11_12[4];
+		UINT8       unicode_5_10[12];           // aligned
+		UINT8       start_clu[2];               // aligned
+		UINT8       unicode_11_12[4];           // aligned
 	} EXT_DENTRY_T;
 
 	/* MS-DOS EXFAT file directory entry (32 bytes) */
 	typedef struct {
 		UINT8       type;
 		UINT8       num_ext;
-		UINT8       checksum[2];
-		UINT8       attr[2];
+		UINT8       checksum[2];                // aligned
+		UINT8       attr[2];                    // aligned
 		UINT8       reserved1[2];
-		UINT8       create_time[2];
-		UINT8       create_date[2];
-		UINT8       modify_time[2];
-		UINT8       modify_date[2];
-		UINT8       access_time[2];
-		UINT8       access_date[2];
+		UINT8       create_time[2];             // aligned
+		UINT8       create_date[2];             // aligned
+		UINT8       modify_time[2];             // aligned
+		UINT8       modify_date[2];             // aligned
+		UINT8       access_time[2];             // aligned
+		UINT8       access_date[2];             // aligned
 		UINT8       create_time_ms;
 		UINT8       modify_time_ms;
 		UINT8       access_time_ms;
@@ -341,19 +350,19 @@ extern "C" {
 		UINT8       flags;
 		UINT8       reserved1;
 		UINT8       name_len;
-		UINT8       name_hash[2];
+		UINT8       name_hash[2];               // aligned
 		UINT8       reserved2[2];
-		UINT8       valid_size[8];
-		UINT8       reserved3[4];
-		UINT8       start_clu[4];
-		UINT8       size[8];
+		UINT8       valid_size[8];              // aligned
+		UINT8       reserved3[4];               // aligned
+		UINT8       start_clu[4];               // aligned
+		UINT8       size[8];                    // aligned
 	} STRM_DENTRY_T;
 
 	/* MS-DOS EXFAT file name directory entry (32 bytes) */
 	typedef struct {
 		UINT8       type;
 		UINT8       flags;
-		UINT8       unicode_0_14[30];
+		UINT8       unicode_0_14[30];           // aligned
 	} NAME_DENTRY_T;
 
 	/* MS-DOS EXFAT allocation bitmap directory entry (32 bytes) */
@@ -361,18 +370,18 @@ extern "C" {
 		UINT8       type;
 		UINT8       flags;
 		UINT8       reserved[18];
-		UINT8       start_clu[4];
-		UINT8       size[8];
+		UINT8       start_clu[4];               // aligned
+		UINT8       size[8];                    // aligned
 	} BMAP_DENTRY_T;
 
 	/* MS-DOS EXFAT up-case table directory entry (32 bytes) */
 	typedef struct {
 		UINT8       type;
 		UINT8       reserved1[3];
-		UINT8       checksum[4];
+		UINT8       checksum[4];                // aligned
 		UINT8       reserved2[12];
-		UINT8       start_clu[4];
-		UINT8       size[8];
+		UINT8       start_clu[4];               // aligned
+		UINT8       size[8];                    // aligned
 	} CASE_DENTRY_T;
 
 	/* MS-DOS EXFAT volume label directory entry (32 bytes) */
@@ -491,6 +500,10 @@ extern "C" {
 		void *__buf;
 	} ENTRY_SET_CACHE_T;
 
+	/*
+	 * External Function Declarations
+	 */
+
 	/* file system initialization & shutdown functions */
 	INT32 ffsInit(void);
 	INT32 ffsShutdown(void);
@@ -515,9 +528,14 @@ extern "C" {
 	INT32 ffsSetStat(struct inode *inode, DIR_ENTRY_T *info);
 	INT32 ffsMapCluster(struct inode *inode, INT32 clu_offset, UINT32 *clu);
 
+	/* directory management functions */
 	INT32 ffsCreateDir(struct inode *inode, UINT8 *path, FILE_ID_T *fid);
 	INT32 ffsReadDir(struct inode *inode, DIR_ENTRY_T *dir_ent);
 	INT32 ffsRemoveDir(struct inode *inode, FILE_ID_T *fid);
+
+	/*
+	 * External Function Declarations (NOT TO UPPER LAYER)
+	 */
 
 	/* fs management functions */
 	INT32  fs_init(void);

@@ -34,6 +34,10 @@
 extern "C" {
 #endif
 
+	/*
+	 * Type Definitions
+	 */
+
 	typedef struct {
 		UINT16      sec;        /* 0 ~ 59               */
 		UINT16      min;        /* 0 ~ 59               */
@@ -42,6 +46,10 @@ extern "C" {
 		UINT16      mon;        /* 1 ~ 12               */
 		UINT16      year;       /* 0 ~ 127 (since 1980) */
 	} TIMESTAMP_T;
+
+	/*
+	 * External Function Declarations
+	 */
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37)
 #define DECLARE_MUTEX(m) DEFINE_SEMAPHORE(m)

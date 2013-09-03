@@ -35,6 +35,10 @@
 extern "C" {
 #endif
 
+/*
+ * Constant & Macro Definitions
+ */
+
 #define NUM_UPCASE              2918
 
 #define DOS_CUR_DIR_NAME        ".          "
@@ -48,6 +52,10 @@ extern "C" {
 #define UNI_PAR_DIR_NAME        "\0.\0."
 #endif
 
+/*
+ * Type Definitions
+ */
+
 /* DOS name stucture */
 typedef struct {
 	UINT8       name[DOS_NAME_LENGTH];
@@ -60,6 +68,10 @@ typedef struct {
 	UINT16      name_hash;
 	UINT8       name_len;
 } UNI_NAME_T;
+
+/*
+ * External Function Declarations
+ */
 
 /* NLS management function */
 UINT16 nls_upper(struct super_block *sb, UINT16 a);

@@ -33,9 +33,15 @@
 extern "C" {
 #endif
 
+	/*
+	 * Constant & Macro Definitions
+	 */
 #define LOCKBIT                 0x01
 #define DIRTYBIT                0x02
 
+	/*
+	 * Type Definitions
+	 */
 	typedef struct __BUF_CACHE_T {
 		struct __BUF_CACHE_T *next;
 		struct __BUF_CACHE_T *prev;
@@ -47,6 +53,9 @@ extern "C" {
 		struct buffer_head   *buf_bh;
 	} BUF_CACHE_T;
 
+	/*
+	 * External Function Declarations
+	 */
 	INT32  buf_init(struct super_block *sb);
 	INT32  buf_shutdown(struct super_block *sb);
 	INT32  FAT_read(struct super_block *sb, UINT32 loc, UINT32 *content);

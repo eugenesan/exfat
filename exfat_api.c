@@ -38,9 +38,20 @@
 #include "exfat_super.h"
 #include "exfat.h"
 
+/*
+ * Global Variable Definitions
+ */
+
 extern FS_STRUCT_T      fs_struct[];
 
 extern struct semaphore z_sem;
+
+/*
+ * Global Function Definitions
+ * All functions for global use have same return value format,
+ * that is, FFS_SUCCESS on success and several FS error code on
+ * various error condition
+ */
 
 /*
  * exFAT Filesystem Init & Exit Functions
@@ -425,7 +436,7 @@ INT32 FsCreateDir(struct inode *inode, UINT8 *path, FILE_ID_T *fid)
 	FS_INFO_T *p_fs = &(EXFAT_SB(sb)->fs_info);
 
 	/* check the validity of pointer parameters */
-	if ((fid == NULL) || (path == NULL) || (STRLEN(path) == 0))
+	if ((fid == NULL) || (path == NULL) || (*path == '\0'))
 		return(FFS_ERROR);
 
 	/* acquire the lock for file system critical section */

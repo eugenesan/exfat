@@ -33,20 +33,34 @@
 
 #include <linux/nls.h>
 
+/*
+ * Local Variable Definitions
+ */
+
 static UINT16 bad_dos_chars[] = {
+	/* + , ; = [ ] */
 	0x002B, 0x002C, 0x003B, 0x003D, 0x005B, 0x005D,
 	0xFF0B, 0xFF0C, 0xFF1B, 0xFF1D, 0xFF3B, 0xFF3D,
 	0
 };
 
 static UINT16 bad_uni_chars[] = {
+	/* " * / : < > ? \ | */
 	0x0022,         0x002A, 0x002F, 0x003A,
 	0x003C, 0x003E, 0x003F, 0x005C, 0x007C,
 	0
 };
 
+/*
+ * Local Function Declarations
+ */
+
 static INT32  convert_uni_to_ch(struct nls_table *nls, UINT8 *ch, UINT16 uni, INT32 *lossy);
 static INT32  convert_ch_to_uni(struct nls_table *nls, UINT16 *uni, UINT8 *ch, INT32 *lossy);
+
+/*
+ * Global Function Definitions
+ */
 
 UINT16 nls_upper(struct super_block *sb, UINT16 a)
 {
@@ -105,6 +119,7 @@ void nls_uniname_to_dosname(struct super_block *sb, DOS_NAME_T *p_dosname, UNI_N
 		return;
 	}
 
+	/* search for the last embedded period */
 	last_period = NULL;
 	for (p = uniname; *p; p++) {
 		if (*p == (UINT16) '.') last_period = p;
@@ -149,7 +164,7 @@ void nls_uniname_to_dosname(struct super_block *sb, DOS_NAME_T *p_dosname, UNI_N
 				for (j = 0; j < len; j++, i++) {
 					*(dosname+i) = *(buf+j);
 				}
-			} else {
+			} else { /* len == 1 */
 				if ((*buf >= 'a') && (*buf <= 'z')) {
 					*(dosname+i) = *buf - ('a' - 'A');
 
@@ -245,7 +260,7 @@ void nls_uniname_to_cstring(struct super_block *sb, UINT8 *p_cstring, UNI_NAME_T
 		if (len > 1) {
 			for (j = 0; j < len; j++)
 				*p_cstring++ = (INT8) *(buf+j);
-		} else {
+		} else { /* len == 1 */
 			*p_cstring++ = (INT8) *buf;
 		}
 
@@ -264,6 +279,7 @@ void nls_cstring_to_uniname(struct super_block *sb, UNI_NAME_T *p_uniname, UINT8
 	UINT16 *uniname = p_uniname->name;
 	struct nls_table *nls = EXFAT_SB(sb)->nls_io;
 
+	/* strip all trailing spaces */
 	end_of_name = p_cstring + STRLEN((INT8 *) p_cstring);
 
 	while (*(--end_of_name) == ' ') {
@@ -272,6 +288,8 @@ void nls_cstring_to_uniname(struct super_block *sb, UNI_NAME_T *p_uniname, UINT8
 	*(++end_of_name) = '\0';
 
 	if (STRCMP((INT8 *) p_cstring, ".") && STRCMP((INT8 *) p_cstring, "..")) {
+
+		/* strip all trailing periods */
 		while (*(--end_of_name) == '.') {
 			if (end_of_name < p_cstring) break;
 		}
@@ -303,9 +321,13 @@ void nls_cstring_to_uniname(struct super_block *sb, UNI_NAME_T *p_uniname, UINT8
 	p_uniname->name_len = j;
 	p_uniname->name_hash = calc_checksum_2byte((void *) upname, j<<1, 0, CS_DEFAULT);
 
-	if (p_lossy != NULL) 
+	if (p_lossy != NULL)
 		*p_lossy = lossy;
 }
+
+/*
+ * Local Function Definitions
+ */
 
 static INT32 convert_ch_to_uni(struct nls_table *nls, UINT16 *uni, UINT8 *ch, INT32 *lossy)
 {
@@ -319,6 +341,7 @@ static INT32 convert_ch_to_uni(struct nls_table *nls, UINT16 *uni, UINT8 *ch, IN
 	}
 
 	if ((len = nls->char2uni(ch, NLS_MAX_CHARSET_SIZE, uni)) < 0) {
+		/* conversion failed */
 		printk("%s: fail to use nls \n", __func__);
 		if (lossy != NULL)
 			*lossy = TRUE;
@@ -342,6 +365,7 @@ static INT32 convert_uni_to_ch(struct nls_table *nls, UINT8 *ch, UINT16 uni, INT
 	}
 
 	if ((len = nls->uni2char(uni, ch, NLS_MAX_CHARSET_SIZE)) < 0) {
+		/* conversion failed */
 		printk("%s: fail to use nls \n", __func__);
 		if (lossy != NULL) *lossy = TRUE;
 		ch[0] = '_';

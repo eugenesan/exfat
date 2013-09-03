@@ -33,6 +33,10 @@
 extern "C" {
 #endif
 
+	/*
+	 * Constant & Macro Definitions
+	 */
+
 #define MBR_SIGNATURE           0xAA55
 
 	/* MS-DOS FAT master boot record (512 bytes) */
@@ -51,6 +55,10 @@ extern "C" {
 		UINT8       start_sector[4];
 		UINT8       num_sectors[4];
 	} PART_ENTRY_T;
+
+	/*
+	 * External Function Declarations
+	 */
 
 	/* volume management functions */
 	INT32 ffsSetPartition(INT32 dev, INT32 num_vol, PART_INFO_T *vol_spec);
