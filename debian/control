@@ -1,9 +1,12 @@
-Source: exfat
+Source: exfat-nofuse
 Section: admin
 Priority: optional
 Maintainer: Eugene San (eugenesan) <eugenesan@gmail.com>
-Standards-Version: 3.9.1
 Build-Depends: debhelper (>= 7.0.50~), dh-modaliases
+Standards-Version: 3.9.1
+Homepage: https://github.com/dorimanx/exfat-nofuse
+Vcs-Browser: https://github.com/dorimanx/exfat-nofuse
+Vcs-Git: https://github.com/dorimanx/exfat-nofuse.git
 
 Package: exfat-kernel-source
 Architecture: all

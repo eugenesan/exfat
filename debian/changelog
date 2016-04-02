@@ -1,3 +1,46 @@
+exfat-nofuse (1.2.9+20160316-0) unstable; urgency=medium
+
+  * New upstream snapshot (a8d79fc258336dfe71a07e6c3e0f434a630b9e37)
+
+ -- Eugene San (eugenesan) <eugenesan@gmail.com>  Sat, 02 Apr 2016 12:58:24 -0400
+
+exfat-nofuse (1.2.9+20151110-0) unstable; urgency=medium
+
+  * New upstream snapshot (593e1cef6219a932b281ee486fa68b252182c1f8)
+
+ -- Eugene San (eugenesan) <eugenesan@gmail.com>  Thu, 12 Nov 2015 16:59:38 -0500
+
+exfat-nofuse (1.2.9+20150620-0) unstable; urgency=medium
+
+  * New upstream snapshot
+
+ -- Eugene San (eugenesan) <eugenesan@gmail.com>  Sat, 25 Jul 2015 09:48:05 -0400
+
+exfat-nofuse (1.2.9+20150125-0) unstable; urgency=medium
+
+  * New upstream snapshot
+
+ -- Eugene San (eugenesan) <eugenesan@gmail.com>  Mon, 16 Feb 2015 07:24:51 +0200
+
+exfat-nofuse (1.2.9+20141015-0) unstable; urgency=medium
+
+  * New upstream snapshot
+  * Rename package after upstream
+
+ -- Eugene San (eugenesan) <eugenesan@gmail.com>  Sun, 16 Nov 2014 10:01:04 +0200
+
+exfat (1.2.9+20140805-0) unstable; urgency=medium
+
+  * New upstream snapshot
+
+ -- Eugene San (eugenesan) <eugenesan@gmail.com>  Sun, 05 Oct 2014 11:15:56 +0300
+
+exfat (1.2.8+20140413-0) unstable; urgency=low
+
+  * New upstream snapshot
+
+ -- Eugene San (eugenesan) <eugenesan@gmail.com>  Sat, 19 Apr 2014 19:36:19 +0300
+
 exfat (1.2.7-1) unstable; urgency=low
 
   * Initial release

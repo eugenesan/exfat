@@ -5,6 +5,8 @@ Upstream Author(s):
 
 Downloaded from:
 	http://opensource.samsung.com/ :: exfat_1.2.4.zip
+	and
+	https://github.com/dorimanx/exfat-nofuse/archive/master.tar.gz
 
 Copyright:
 	Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
